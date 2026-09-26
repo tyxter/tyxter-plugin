@@ -1,0 +1,36 @@
+{
+  "name": "tyxter",
+  "displayName": "Tyxter Messaging",
+  "version": "0.1.0",
+  "description": "WhatsApp Business messaging skills for the Tyxter API: sandbox sends, webhook testing and signature verification, templates, delivery debugging, billing usage, and SDK and CLI discovery.",
+  "author": {
+    "name": "Tyxter",
+    "url": "https://tyxter.com"
+  },
+  "homepage": "https://tyxter.com",
+  "repository": "https://github.com/tyxter-dev/claude-plugin",
+  "license": "MIT",
+  "keywords": [
+    "whatsapp",
+    "messaging",
+    "tyxter",
+    "webhooks",
+    "templates",
+    "sandbox"
+  ],
+  "userConfig": {
+    "TYXTER_MCP_URL": {
+      "type": "string",
+      "title": "Tyxter MCP URL",
+      "description": "Your Tyxter MCP server URL, shaped https://api.tyxter.com/mcp/p/<project>/<environment>. Copy it from the Tyxter dashboard Connections page, MCP tab.",
+      "required": true
+    },
+    "TYXTER_API_KEY": {
+      "type": "string",
+      "title": "Tyxter API key",
+      "description": "Tyxter API key sent as a bearer token to the MCP URL. Match the prefix to the URL's environment: a tx_sandbox_ key for a sandbox URL, a tx_live_ key for a production URL.",
+      "required": true,
+      "sensitive": true
+    }
+  }
+}

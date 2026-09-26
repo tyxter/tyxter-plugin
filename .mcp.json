@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "tyxter-messaging": {
+      "type": "http",
+      "url": "${user_config.TYXTER_MCP_URL}",
+      "headers": {
+        "Authorization": "Bearer ${user_config.TYXTER_API_KEY}"
+      }
+    }
+  }
+}
