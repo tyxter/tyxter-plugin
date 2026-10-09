@@ -3,7 +3,7 @@
 Skills that help Claude work with the Tyxter Messaging API, Tyxter's WhatsApp Business messaging
 API, plus a Tyxter MCP server entry that Claude Code connects with your own URL and API key.
 
-The plugin is beta, version `0.1.0`. Skill wording and plugin configuration can change between
+The plugin is beta, version `0.1.1`. Skill wording and plugin configuration can change between
 releases. This repository is both the plugin and its marketplace: `.claude-plugin/plugin.json`
 describes the plugin and `.claude-plugin/marketplace.json` lists it under the `tyxter`
 marketplace.
