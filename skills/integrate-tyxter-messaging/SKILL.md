@@ -16,12 +16,12 @@ files.
    framework, existing environment-file convention, and package manager.
 2. Select the package manager from the repository's `packageManager` field or
    lockfile. Do not create a second lockfile.
-3. Install `@tyxter/sdk-js` in that application package:
+3. Install `tyxter` in that application package:
 
-       pnpm add @tyxter/sdk-js
-       npm install @tyxter/sdk-js
-       yarn add @tyxter/sdk-js
-       bun add @tyxter/sdk-js
+       pnpm add tyxter
+       npm install tyxter
+       yarn add tyxter
+       bun add tyxter
 
    Run only the command that matches the repository. If the repository has no
    JavaScript/TypeScript runtime, ask before adding a Node 20+ integration
@@ -35,7 +35,7 @@ complete SDK shape for `POST /v1/agent-api-key-device-authorizations` and its
 surrounding file/module style, but do not change the request fields or requested
 sandbox scopes:
 
-    import { TyxterApiError, TyxterBootstrap } from '@tyxter/sdk-js';
+    import { TyxterApiError, TyxterBootstrap } from 'tyxter';
 
     const bootstrap = new TyxterBootstrap(
       process.env.TYXTER_API_BASE_URL
@@ -121,7 +121,7 @@ The calls map to `GET /v1/sandbox/quickstart`,
 `POST /v1/sandbox/inbound-messages`, and `POST /v1/messages` in that order.
 
     import { randomUUID } from 'node:crypto';
-    import { Tyxter } from '@tyxter/sdk-js';
+    import { Tyxter } from 'tyxter';
 
     function requiredEnv(name: string): string {
       const value = process.env[name];
@@ -195,7 +195,7 @@ normal routing conventions. Enable that framework's raw-body option before any
 JSON parser, scoped to this route when the framework supports it. The SDK
 verifier accepts the exact UTF-8 request body as a string:
 
-    import { verifyWebhookSignature } from '@tyxter/sdk-js/webhook-verifier';
+    import { verifyWebhookSignature } from 'tyxter/webhook-verifier';
 
     type HeaderValue = string | string[] | undefined;
 
@@ -269,7 +269,7 @@ tunnel.
 
 - Supply an idempotency key on every SDK write that accepts one. Reuse it only
   for retries of the same logical operation.
-- Catch `TyxterApiError` from `@tyxter/sdk-js` and branch on its
+- Catch `TyxterApiError` from `tyxter` and branch on its
   stable `code`, never on its human `message`. A safe boundary is
   `error instanceof TyxterApiError`; log only `code`, `requestId`, and
   `traceId`, then apply repository-specific recovery for known codes and

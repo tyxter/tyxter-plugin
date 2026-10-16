@@ -25,8 +25,8 @@ Use read-only public billing and usage endpoints first. Top-ups, saved payment m
 
 1. Read `GET /v1/billing/balance` and record available BRL credit.
 2. Read `GET /v1/rate-cards/current` to understand current pricing inputs.
-3. Read `GET /v1/usage` with the requested date range and dimensions.
-4. Read `GET /v1/billing/ledger` for reconciliation when balance or charges are disputed.
+3. Read `GET /v1/usage` with the requested date range and dimensions: `period_start` and `period_end` are required ISO 8601 instants with an offset (for example `2026-10-01T00:00:00Z`); `group_by` is optional, one of `destination_country`, `template_id`, `meta_pass_through_fee`, `tyxter_markup` or `package_consumption`.
+4. Read `GET /v1/billing/ledger` for reconciliation when balance or charges are disputed. An approved phone rental holds its first month in `held_brl` on the balance, with no ledger line until the carrier delivers the number.
 5. Read `GET /v1/invoices` and `GET /v1/invoices/{id}/download` only when invoice context is needed.
 6. If delivery is blocked, check for production credit exhaustion and connect the result to the message trace or API error.
 

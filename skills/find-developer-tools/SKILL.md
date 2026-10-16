@@ -1,6 +1,6 @@
 ---
 name: find-developer-tools
-description: Find and install the official Tyxter Messaging developer tools — the @tyxter/sdk-js TypeScript/JavaScript SDK and the tyxter-cli — and how to authenticate them.
+description: Find and install the official Tyxter Messaging developer tools — the tyxter TypeScript/JavaScript SDK and the tyxter-cli — and how to authenticate them.
 ---
 
 # Find Tyxter Messaging developer tools
@@ -8,11 +8,11 @@ description: Find and install the official Tyxter Messaging developer tools — 
 Tyxter Messaging is an agent-first WhatsApp Business messaging API. These are the
 official, supported ways to integrate it from code or a terminal.
 
-## TypeScript / JavaScript SDK — `@tyxter/sdk-js`
+## TypeScript / JavaScript SDK — `tyxter`
 
 Published on npm:
 
-    npm install @tyxter/sdk-js
+    npm install tyxter
 
 A typed client for the public `/v1/*` API — messages, templates, broadcasts,
 phone numbers, payments, and signed webhooks. Runs in Node and edge runtimes.

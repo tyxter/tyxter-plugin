@@ -14,7 +14,7 @@ The plugin ships eight skills. Each line below quotes the skill's own `descripti
 
 - `/tyxter:create-template`: Create and submit Tyxter WhatsApp templates through the public API. Use when a user asks to draft a template, call template CRUD endpoints, estimate template cost, submit for approval, duplicate a template, or validate template-send readiness.
 - `/tyxter:debug-failed-delivery`: Debug failed Tyxter message delivery by inspecting message status, trace IDs, sandbox scenarios, webhook attempts, provider error codes, and retry posture. Use when a user reports failed, stuck, cancelled, bounced, or missing WhatsApp messages.
-- `/tyxter:find-developer-tools`: Find and install the official Tyxter Messaging developer tools — the @tyxter/sdk-js TypeScript/JavaScript SDK and the tyxter-cli — and how to authenticate them.
+- `/tyxter:find-developer-tools`: Find and install the official Tyxter Messaging developer tools — the tyxter TypeScript/JavaScript SDK and the tyxter-cli — and how to authenticate them.
 - `/tyxter:inspect-billing-usage`: Inspect Tyxter billing balance, usage, ledger entries, invoices, and rate-card context through public read APIs. Use when a user asks about prepaid credits, usage reconciliation, cost records, billing hard-blocks, invoice downloads, or spend investigation.
 - `/tyxter:integrate-tyxter-messaging`: Integrate Tyxter Messaging into an existing repository by installing the official JavaScript/TypeScript SDK, obtaining a human-approved sandbox API key, proving a first send, adding verified webhooks, handling stable errors and idempotency, and promoting to production only as a separate action.
 - `/tyxter:send-sandbox-message`: Send a Tyxter sandbox WhatsApp message through the public API and verify its status/webhook behavior. Use when a user asks to send a test message, validate Quickstart, exercise sandbox outbound delivery, or debug the first-message developer flow against the local stack.
@@ -90,7 +90,7 @@ enter.
 
 A few skills also reach other places:
 
-- `find-developer-tools` and `integrate-tyxter-messaging` install `@tyxter/sdk-js` from npm, and
+- `find-developer-tools` and `integrate-tyxter-messaging` install `tyxter` from npm, and
   `find-developer-tools` and `test-sandbox-webhooks` use the `ghcr.io/tyxter-dev/tyxter-cli`
   image from GitHub Container Registry. `test-sandbox-webhooks` can instead clone
   `https://github.com/tyxter-dev/tyxter-cli` to build the CLI from source.
