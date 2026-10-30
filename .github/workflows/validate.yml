@@ -1,0 +1,25 @@
+name: Validate plugin
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - run: node .github/release-metadata.mjs
+      - run: node --test .github/release.test.mjs
+      - run: python3 skills/test-sandbox-webhooks/scripts/write_listener_compose.test.py

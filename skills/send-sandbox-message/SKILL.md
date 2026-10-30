@@ -1,6 +1,6 @@
 ---
 name: send-sandbox-message
-description: Send a Tyxter sandbox WhatsApp message through the public API and verify its status/webhook behavior. Use when a user asks to send a test message, validate Quickstart, exercise sandbox outbound delivery, or debug the first-message developer flow against the local stack.
+description: Use when a user needs a first Tyxter sandbox send, wants to validate Quickstart, or needs to inspect test-message delivery.
 ---
 
 # Send Sandbox Message
@@ -15,7 +15,7 @@ Use the public `/v1/messages` API only. Do not use dashboard BFF routes or autom
 
 ## Required env vars
 
-- `TYXTER_API_BASE_URL`: default to `http://localhost:3001` for the local stack.
+- `TYXTER_API_BASE_URL`: default to `https://api.tyxter.com`; set `http://localhost:3001` explicitly for a local stack.
 - `TYXTER_SANDBOX_API_KEY`: sandbox key only. The seeded local placeholder is `tx_sandbox_localSandboxKey000000000001`.
 - `TYXTER_TEST_TO`: recipient phone in E.164 format. Use a sandbox-safe value unless the user provides another test number.
 
@@ -29,11 +29,11 @@ Use the public `/v1/messages` API only. Do not use dashboard BFF routes or autom
 6. Poll `GET /v1/messages/{id}` until the sandbox timeline reaches a terminal or observable delivery state.
 7. If webhook validation is requested, register a webhook endpoint first and correlate events by `message_id` or `trace_id`.
 
-## Local stack commands
+## API commands
 
 ```bash
-export TYXTER_API_BASE_URL="${TYXTER_API_BASE_URL:-http://localhost:3001}"
-export TYXTER_SANDBOX_API_KEY="${TYXTER_SANDBOX_API_KEY:-tx_sandbox_localSandboxKey000000000001}"
+export TYXTER_API_BASE_URL="${TYXTER_API_BASE_URL:-https://api.tyxter.com}"
+: "${TYXTER_SANDBOX_API_KEY:?Load a matching sandbox API key into your environment}"
 export TYXTER_TEST_TO="${TYXTER_TEST_TO:-+12025550123}"
 export IDEMPOTENCY_KEY="$(node -e "console.log(crypto.randomUUID())")"
 

@@ -1,6 +1,6 @@
 ---
 name: test-sandbox-webhooks
-description: Set up and run Tyxter sandbox webhook tests against a customer app using the public Tyxter CLI Docker container. Use when a user asks Codex or Claude Code to test a Tyxter webhook integration, validate local sandbox webhooks, run the CLI listener against their app, create reusable sandbox webhook smoke tests, or debug the CLI + app combo.
+description: Use when a user needs to test Tyxter sandbox webhooks against a local app, run the CLI listener, or generate a reusable Docker Compose setup.
 ---
 
 # Test Sandbox Webhooks
@@ -49,10 +49,16 @@ webhook endpoint.
      bundled script from this skill's `scripts/` directory:
 
      ```bash
-     python /path/to/test-sandbox-webhooks/scripts/write_listener_compose.py \
+     python3 "${CLAUDE_SKILL_DIR}/scripts/write_listener_compose.py" \
        --app-port 3000 \
        --webhook-path /webhooks/tyxter
      ```
+
+     Claude Code expands `${CLAUDE_SKILL_DIR}` to this skill's installed directory.
+     In Codex, use the absolute directory containing the loaded `SKILL.md` instead.
+     In a Messaging checkout it is `plugin/skills/test-sandbox-webhooks`; in a plugin
+     checkout it is `skills/test-sandbox-webhooks`. An API-served `SKILL.md` has no
+     bundled script: use a plugin or repository checkout for this setup.
 
      Then copy `.env.tyxter-cli.example` to `.env.tyxter-cli` and set the sandbox key.
 

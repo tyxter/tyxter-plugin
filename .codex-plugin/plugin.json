@@ -1,6 +1,6 @@
 {
   "name": "tyxter",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "WhatsApp Business messaging skills for the Tyxter API: sandbox sends, webhook testing and signature verification, templates, delivery debugging, billing usage, and SDK and CLI discovery.",
   "author": {
     "name": "Tyxter",

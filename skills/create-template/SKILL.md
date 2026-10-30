@@ -1,6 +1,6 @@
 ---
 name: create-template
-description: Create and submit Tyxter WhatsApp templates through the public API. Use when a user asks to draft a template, call template CRUD endpoints, estimate template cost, submit for approval, duplicate a template, or validate template-send readiness.
+description: Use when a user needs to draft, create, estimate, or submit a WhatsApp template through the Tyxter API.
 ---
 
 # Create Template
@@ -15,8 +15,8 @@ Use public template endpoints. Do not create templates through dashboard-only co
 
 ## Required env vars
 
-- `TYXTER_API_BASE_URL`: default to `http://localhost:3001` locally.
-- `TYXTER_SANDBOX_API_KEY`: sandbox key for local testing.
+- `TYXTER_API_BASE_URL`: default to `https://api.tyxter.com`; set `http://localhost:3001` explicitly for a local stack.
+- `TYXTER_SANDBOX_API_KEY`: sandbox key for the selected API host.
 - `TYXTER_TEMPLATE_NAME`: lowercase template name such as `order_update_demo`.
 - `TYXTER_TEMPLATE_LANGUAGE`: default to `en_US` unless the user specifies another locale.
 
@@ -30,11 +30,11 @@ Use public template endpoints. Do not create templates through dashboard-only co
 6. Submit only when the user explicitly asks for approval submission.
 7. Send a template message only after the template is approved or sandbox-approved.
 
-## Local stack commands
+## API commands
 
 ```bash
-export TYXTER_API_BASE_URL="${TYXTER_API_BASE_URL:-http://localhost:3001}"
-export TYXTER_SANDBOX_API_KEY="${TYXTER_SANDBOX_API_KEY:-tx_sandbox_localSandboxKey000000000001}"
+export TYXTER_API_BASE_URL="${TYXTER_API_BASE_URL:-https://api.tyxter.com}"
+: "${TYXTER_SANDBOX_API_KEY:?Load a matching sandbox API key into your environment}"
 export TYXTER_TEMPLATE_NAME="${TYXTER_TEMPLATE_NAME:-order_update_demo}"
 export TYXTER_TEMPLATE_LANGUAGE="${TYXTER_TEMPLATE_LANGUAGE:-en_US}"
 export IDEMPOTENCY_KEY="$(node -e "console.log(crypto.randomUUID())")"

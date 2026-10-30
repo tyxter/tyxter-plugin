@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 
 
 def main() -> int:
@@ -23,13 +25,42 @@ def main() -> int:
 
     compose_path = Path(args.compose)
     env_path = Path(args.env_example)
+    if compose_path.resolve() == env_path.resolve():
+        parser.error("--compose and --env-example must name different files")
     for path in (compose_path, env_path):
+        if path.exists() and not path.is_file():
+            parser.error(f"{path} must be a regular file")
         if path.exists() and not args.force:
             raise SystemExit(f"{path} already exists. Pass --force to overwrite.")
 
     forward_url = f"http://host.docker.internal:{args.app_port}{normalize_path(args.webhook_path)}"
-    compose_path.write_text(compose_text(args.image, env_path.name), encoding="utf-8")
-    env_path.write_text(env_text(args.api_url, forward_url), encoding="utf-8")
+    staged = []
+    created = []
+    try:
+        # Stage both outputs before publishing either, including with --force.
+        for path, text in (
+            (compose_path, compose_text(args.image, env_path.name)),
+            (env_path, env_text(args.api_url, forward_url)),
+        ):
+            with NamedTemporaryFile(
+                mode="w", encoding="utf-8", dir=path.parent, delete=False
+            ) as file:
+                staged.append((Path(file.name), path))
+                file.write(text)
+        for temporary, path in staged:
+            if args.force:
+                os.replace(temporary, path)
+            else:
+                # Link exclusively so a concurrent invocation cannot overwrite a file.
+                os.link(temporary, path)
+                created.append(path)
+    except OSError as error:
+        for path in created:
+            path.unlink(missing_ok=True)
+        parser.exit(1, f"Cannot write listener setup: {error}\n")
+    finally:
+        for temporary, _ in staged:
+            temporary.unlink(missing_ok=True)
     print(f"Wrote {compose_path}")
     print(f"Wrote {env_path}")
     print(f"Copy {env_path} to {env_path.with_suffix('')} and set TYXTER_API_KEY.")

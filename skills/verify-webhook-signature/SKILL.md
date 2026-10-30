@@ -1,6 +1,6 @@
 ---
 name: verify-webhook-signature
-description: Verify Tyxter webhook signatures and replay protections. Use when a user asks to implement, audit, test, or debug HMAC webhook verification, raw-body handling, timestamp tolerance, replay rejection, or local tunnel webhook delivery.
+description: Use when a user needs to implement or debug Tyxter webhook HMAC verification, raw-body handling, timestamp checks, or replay protection.
 ---
 
 # Verify Webhook Signature

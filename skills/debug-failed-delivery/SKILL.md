@@ -1,6 +1,6 @@
 ---
 name: debug-failed-delivery
-description: Debug failed Tyxter message delivery by inspecting message status, trace IDs, sandbox scenarios, webhook attempts, provider error codes, and retry posture. Use when a user reports failed, stuck, cancelled, bounced, or missing WhatsApp messages.
+description: Use when a Tyxter WhatsApp message fails, stalls, disappears, or needs investigation through status, traces, and webhook attempts.
 ---
 
 # Debug Failed Delivery
@@ -16,7 +16,7 @@ Start with public read APIs and trace evidence. Do not inspect dashboard BFF rou
 
 ## Required env vars
 
-- `TYXTER_API_BASE_URL`: default to `http://localhost:3001` locally.
+- `TYXTER_API_BASE_URL`: default to `https://api.tyxter.com`; set `http://localhost:3001` explicitly for a local stack.
 - `TYXTER_API_KEY`: sandbox or production key for the environment being investigated.
 - `TYXTER_MESSAGE_ID`: message id to inspect.
 - `TYXTER_TRACE_ID`: optional trace id from API response or logs.
@@ -30,11 +30,11 @@ Start with public read APIs and trace evidence. Do not inspect dashboard BFF rou
 5. Classify the failure as validation, idempotency conflict, opt-out/consent block, provider rejection, billing hard-block, worker retry, webhook delivery, or unknown.
 6. Recommend the next action based on class: fix request shape, retry with same idempotency key, opt contact in, top up balance, resend webhook event, or escalate with trace evidence.
 
-## Local stack commands
+## API commands
 
 ```bash
-export TYXTER_API_BASE_URL="${TYXTER_API_BASE_URL:-http://localhost:3001}"
-export TYXTER_API_KEY="${TYXTER_API_KEY:-tx_sandbox_localSandboxKey000000000001}"
+export TYXTER_API_BASE_URL="${TYXTER_API_BASE_URL:-https://api.tyxter.com}"
+: "${TYXTER_API_KEY:?Load a matching API key into your environment}"
 
 curl -sS "$TYXTER_API_BASE_URL/v1/messages/$TYXTER_MESSAGE_ID" \
   -H "Authorization: Bearer $TYXTER_API_KEY"
