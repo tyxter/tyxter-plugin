@@ -17,14 +17,27 @@ Published on npm:
 A typed client for the public `/v1/*` API — messages, templates, broadcasts,
 phone numbers, payments, and signed webhooks. Runs in Node and edge runtimes.
 
-## CLI — tyxter-dev/tyxter-cli
+## CLI — `@tyxter/cli`
 
-Distributed as a container image:
+Published on npm. Requires Node.js 22.12+, with no Docker, pnpm, or clone:
 
-    docker pull ghcr.io/tyxter-dev/tyxter-cli:latest
-    docker run --rm ghcr.io/tyxter-dev/tyxter-cli:latest --help
+    npx @tyxter/cli --help
+    npx @tyxter/cli listen --from-now --forward-to http://localhost:3000/webhooks/tyxter
 
-Source: https://github.com/tyxter-dev/tyxter-cli
+Load a sandbox key through `TYXTER_API_KEY` in your environment or ignored
+secret file; do not pass its value on the command line. The normal listener
+requires a `tx_sandbox_` key. It prints a local signing secret for the app's
+verifier and persists state in the ignored `.tyxter-cli/` directory.
+
+Install globally with `npm install --global @tyxter/cli` for the `tyxter`
+command. The official `npx tyxter-cli` compatibility package runs the same CLI.
+
+Docker is also available:
+
+    docker pull ghcr.io/tyxter/tyxter-cli:latest
+    docker run --rm ghcr.io/tyxter/tyxter-cli:latest --help
+
+Source and commands: https://github.com/tyxter/tyxter-cli
 
 ## Authenticate
 

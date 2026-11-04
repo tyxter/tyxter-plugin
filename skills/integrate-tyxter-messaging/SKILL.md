@@ -237,6 +237,20 @@ and return a 2xx quickly. If the repository has no durable store, surface that
 design decision instead of silently using process memory. Do not hand-roll HMAC
 logic and do not verify a parsed or re-serialized JSON body.
 
+For a local receiver, use the official CLI from npm with Node.js 22.12+.
+Docker, pnpm, and a clone are unnecessary:
+
+    npx @tyxter/cli listen --from-now --forward-to http://localhost:3000/webhooks/tyxter
+
+Load `TYXTER_API_KEY` from the sandbox secret store and share one local
+`TYXTER_WEBHOOK_SECRET` between the CLI and receiver through the environment.
+Keep credentials out of command arguments. Adjust the URL to the real local
+route. Run `npx @tyxter/cli doctor --forward-to <url>` in another terminal,
+then trigger step 3's sandbox inbound call and require a verified 2xx at the
+receiver. Reuse the ignored `.tyxter-cli/` directory across commands, or set
+`TYXTER_CLI_STATE_DIR`. No dashboard webhook endpoint or public tunnel is needed
+for this local proof. Source: https://github.com/tyxter/tyxter-cli.
+
 When the receiver has a human-approved public HTTPS URL, register the minimum
 sandbox subscription through `POST /v1/webhook-endpoints` with the exact SDK
 shape below. Add further published event types only when the application handles

@@ -9,8 +9,8 @@ Use Tyxter CLI as the customer would: a sandbox API key, a local app webhook
 URL, and signed forwarded events. Do not ask the user to register a normal
 dashboard webhook endpoint for this local sandbox flow.
 
-Canonical CLI repo: `https://github.com/tyxter-dev/tyxter-cli`.
-Published image: `ghcr.io/tyxter-dev/tyxter-cli:latest`.
+Canonical CLI repo: `https://github.com/tyxter/tyxter-cli`.
+Published image: `ghcr.io/tyxter/tyxter-cli:latest`.
 
 ## Registered HTTPS endpoint versus local listener
 
@@ -42,8 +42,18 @@ webhook endpoint.
    - If any of these cannot be inferred safely, ask one concise question.
 
 2. Choose the CLI mode.
-   - Pull image: use `ghcr.io/tyxter-dev/tyxter-cli:latest`.
-   - Build source: clone `https://github.com/tyxter-dev/tyxter-cli` and use its
+   - Prefer npm with Node 22.12+: `npx @tyxter/cli --help`. No Docker, pnpm,
+     or source checkout is needed. Load `TYXTER_API_KEY` from the environment;
+     never put its value in command history.
+   - In npm mode forward to `http://localhost:<port><path>`. After step 3, run
+     `npx @tyxter/cli listen --from-now --forward-to <url>`, then use
+     `npx @tyxter/cli doctor --forward-to <url>` and `npx @tyxter/cli status`
+     in another terminal. Reuse the working directory and ignored `.tyxter-cli/`
+     state (or set `TYXTER_CLI_STATE_DIR`). For step 6 use
+     `npx @tyxter/cli simulate inbound` with the same arguments, and inspect
+     listener output in step 7. Steps 4 and 5 below show the Docker alternative.
+   - Pull image: use `ghcr.io/tyxter/tyxter-cli:latest`.
+   - Build source: clone `https://github.com/tyxter/tyxter-cli` and use its
      `compose.yaml` or `compose.image.yaml`.
    - If the customer app repo has no compose file and the user wants reusable setup, run the
      bundled script from this skill's `scripts/` directory:
@@ -118,7 +128,7 @@ webhook endpoint.
 
 ## Completion Criteria
 
-- The app is running and reachable by the CLI container.
+- The app is running and reachable by the CLI process.
 - `status` prints a persisted local signing secret and cursor.
 - `doctor` passes, or any diagnostic-only failure is explained and a real event succeeds.
 - A sandbox event is created and forwarded to the app.
