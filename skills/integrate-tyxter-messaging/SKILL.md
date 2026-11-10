@@ -114,6 +114,8 @@ unless the repository already has an explicit `TYXTER_API_BASE_URL` override.
 
 ## 3. Prove the first sandbox send
 
+Each new sandbox environment comes with one simulated sender, at signup and when you create a project. It is created in the same transaction and is active when signup or project creation returns. Read `GET /v1/sandbox/quickstart` once for `sender.default_sender_id`. The sender appears in `GET /v1/phone-numbers` as a connected number (`source: "byon"`, `status: "active"`), with a reserved, non-assignable phone number that cannot be dialed. Quickstart selects the oldest active, unreleased sender. An older environment may need a sender added manually. If the environment has no active sender (for example, an older environment where nobody added one, or one whose sender was removed or released, or moved to another environment), quickstart returns null: ask a person to provision one in the dashboard or use a non-agent key with `phone_numbers:write`. Agent keys cannot hold that write scope. Production environments get no automatic sender. Report a missing sender separately from `missing_scopes`; never invent sender ids.
+
 Put the following proof in a repository-appropriate script or focused test.
 `TYXTER_TEST_RECIPIENT` must be a human-approved E.164 number such as
 `+5511999999999`; do not invent or contact an unapproved number.
@@ -146,9 +148,12 @@ The calls map to `GET /v1/sandbox/quickstart`,
     });
     const quickstart = await tyxter.sandbox.quickstart();
     const sender = quickstart.sender.default_sender_id;
-    if (!sender || !quickstart.capabilities.send_outbound_messages) {
+    if (!sender) {
+      throw new Error('Sandbox has no active sender. Ask a person to provision one in the dashboard or use a non-agent key with phone_numbers:write.');
+    }
+    if (!quickstart.capabilities.send_outbound_messages) {
       throw new Error(
-        `Sandbox is not send-ready; missing scopes: ${quickstart.missing_scopes.join(', ')}`,
+        `Sandbox cannot send; missing scopes: ${quickstart.missing_scopes.join(', ')}`,
       );
     }
 

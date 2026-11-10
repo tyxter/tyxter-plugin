@@ -22,7 +22,7 @@ Use the public `/v1/messages` API only. Do not use dashboard BFF routes or autom
 ## Workflow
 
 1. Confirm the target is sandbox by checking the key starts with `tx_sandbox_`.
-2. Read `sender.default_sender_id` from `GET /v1/sandbox/quickstart`; it is the `sender.id` of the send.
+2. Read `sender.default_sender_id` from `GET /v1/sandbox/quickstart`; it is the `sender.id` of the send. Each new sandbox environment comes with one simulated sender, at signup and when you create a project. It is created in the same transaction and is active when signup or project creation returns. Read `GET /v1/sandbox/quickstart` once for `sender.default_sender_id`. The sender appears in `GET /v1/phone-numbers` as a connected number (`source: "byon"`, `status: "active"`), with a reserved, non-assignable phone number that cannot be dialed. Quickstart selects the oldest active, unreleased sender. An older environment may need a sender added manually. If the environment has no active sender (for example, an older environment where nobody added one, or one whose sender was removed or released, or moved to another environment), quickstart returns null: ask a person to provision one in the dashboard or use a non-agent key with `phone_numbers:write`. Agent keys cannot hold that write scope. Production environments get no automatic sender. Send only with a non-null sender and `capabilities.send_outbound_messages` true; report a missing sender separately from missing scopes.
 3. Open the 24-hour customer-service window with `POST /v1/sandbox/inbound-messages` from the test recipient. Free-form text is accepted only inside that window.
 4. Send `POST /v1/messages` with `channel`, `sender`, `recipient` and `message`, plus an `Idempotency-Key`. Reuse the same key only when retrying the same logical send.
 5. Capture the returned `message_id`, `trace_id`, and initial `status`.
@@ -37,10 +37,18 @@ export TYXTER_API_BASE_URL="${TYXTER_API_BASE_URL:-https://api.tyxter.com}"
 export TYXTER_TEST_TO="${TYXTER_TEST_TO:-+12025550123}"
 export IDEMPOTENCY_KEY="$(node -e "console.log(crypto.randomUUID())")"
 
-# Sender id of the sandbox number.
+# Sender id of the active sandbox number. Read quickstart once as in step 2.
 SENDER_ID="$(curl -sS "$TYXTER_API_BASE_URL/v1/sandbox/quickstart" \
   -H "Authorization: Bearer $TYXTER_SANDBOX_API_KEY" |
-  node -e 'let s="";process.stdin.on("data",(d)=>(s+=d)).on("end",()=>console.log(JSON.parse(s).sender.default_sender_id))')"
+  node -e 'let s="";process.stdin.on("data",(d)=>(s+=d)).on("end",()=>{
+    const ready=JSON.parse(s);
+    if(ready.error) throw new Error(ready.error.code+": "+ready.error.message);
+    const sender=ready.sender.default_sender_id;
+    if(!sender) throw new Error("Sandbox has no active sender. Ask a person to provision one in the dashboard or use a non-agent key with phone_numbers:write.");
+    if(!ready.capabilities.send_outbound_messages) throw new Error("Sandbox cannot send; missing scopes: "+ready.missing_scopes.join(", "));
+    console.log(sender);
+  })')"
+: "${SENDER_ID:?Quickstart returned no active sender; see the message above}"
 
 # Open the customer-service window with a simulated inbound message.
 curl -sS -X POST "$TYXTER_API_BASE_URL/v1/sandbox/inbound-messages" \
